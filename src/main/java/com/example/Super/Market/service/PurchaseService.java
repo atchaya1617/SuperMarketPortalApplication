@@ -1,9 +1,12 @@
 package com.example.Super.Market.service;
 import com.example.Super.Market.entity.PurchaseHeaderLine;
 import com.example.Super.Market.entity.PurchaseHeader;
-import com.example.Super.Market.repository.PHRepository;
+import com.example.Super.Market.repository.PurchaseHeaderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PurchaseService {
@@ -12,7 +15,7 @@ public class PurchaseService {
     PurchaseSequenceService sequenceService;
 
     @Autowired
-    PHRepository phRepository;
+    PurchaseHeaderRepository purchaseHeaderRepository;
 
 
     public PurchaseHeader createPurchase(PurchaseHeader purchaseHeader) {
@@ -38,34 +41,44 @@ public class PurchaseService {
         purchaseHeader.setSubTotal(subTotal);
         purchaseHeader.setGrandTotal(grandTotal);
 
-        PurchaseHeader savedPurchaseHeader = phRepository.save(purchaseHeader);
+        PurchaseHeader savedPurchaseHeader = purchaseHeaderRepository.save(purchaseHeader);
         return savedPurchaseHeader;
     }
 
-    public PurchaseHeader updatePurchase( PurchaseHeader updatedPurchaseHeader) {
-        PurchaseHeader existingPurchaseHeader = phRepository.findById(updatedPurchaseHeader.getPrNo()).orElse(null);
+    public PurchaseHeader updatePurchase(PurchaseHeader updatedPurchaseHeader) {
+        PurchaseHeader existingPurchaseHeader = purchaseHeaderRepository.findById(updatedPurchaseHeader.getPrNo()).orElse(null);
+
+        if (existingPurchaseHeader == null) {
+
+            throw new EntityNotFoundException("PurchaseHeader not found for ID: " + updatedPurchaseHeader.getPrNo());
+        }
 
         existingPurchaseHeader.setLine(updatedPurchaseHeader.getLine());
 
-        double grandTotal = 0.0;
-        double subTotal = 0.0;
+        double grandTotal = existingPurchaseHeader.getGrandTotal();
+        double subTotal = existingPurchaseHeader.getSubTotal();
 
-        for (PurchaseHeaderLine purchaseHeaderLine : existingPurchaseHeader.getLine()) {
-            purchaseHeaderLine.setPurchaseNo(existingPurchaseHeader.getPrNo());
+        for (PurchaseHeaderLine line : existingPurchaseHeader.getLine()) {
+            line.setPurchaseNo(existingPurchaseHeader.getPrNo());
 
-            double pipelineSubTotal = purchaseHeaderLine.getQuantity() * purchaseHeaderLine.getProductPrice();
-            purchaseHeaderLine.setSubTotal(pipelineSubTotal);
+            double lineSubTotal = line.getQuantity() * line.getProductPrice();
+            line.setSubTotal(lineSubTotal);
 
-            double pipelineGrandTotal = pipelineSubTotal + pipelineSubTotal * (purchaseHeaderLine.getTax() / 100) - purchaseHeaderLine.getDiscount();
-            purchaseHeaderLine.setGrandTotal(pipelineGrandTotal);
+            double lineGrandTotal = lineSubTotal + (lineSubTotal * (line.getTax() / 100)) - line.getDiscount();
+            line.setGrandTotal(lineGrandTotal);
 
-            grandTotal += pipelineGrandTotal;
-            subTotal += pipelineSubTotal;
+            grandTotal += lineGrandTotal;
+            subTotal += lineSubTotal;
         }
 
         existingPurchaseHeader.setSubTotal(subTotal);
         existingPurchaseHeader.setGrandTotal(grandTotal);
 
-        return phRepository.saveAndFlush(existingPurchaseHeader);
+        return purchaseHeaderRepository.saveAndFlush(existingPurchaseHeader);
+    }
+
+    public PurchaseHeader getProductByPrNo(String prNo) {
+        Optional<PurchaseHeader> purchaseHeaderOptional = purchaseHeaderRepository.findByPrNo(prNo);
+        return purchaseHeaderOptional.orElse(null);
     }
 }

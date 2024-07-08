@@ -1,7 +1,9 @@
 package com.example.Super.Market.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 @Table(name = "purchase_header")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PurchaseHeader {
 
     @Id
@@ -34,5 +38,6 @@ public class PurchaseHeader {
 
     @OneToMany(mappedBy = "purchaseNo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PurchaseHeaderLine> line ;
+
 
 }

@@ -25,20 +25,19 @@ public class PurchaseController {
             return new ResponseEntity<>(createdPurchaseHeader, HttpStatus.CREATED);
         }
 
-    @PutMapping("/{prNo}")
+    @PutMapping("/update")
     public ResponseEntity<PurchaseHeader> updatePurchase( @RequestBody PurchaseHeader purchaseHeader) {
         PurchaseHeader updatedPurchaseHeader = purchaseService.updatePurchase( purchaseHeader);
         return new ResponseEntity<>(updatedPurchaseHeader,HttpStatus.OK);
     }
 
 
-//    @GetMapping("/getById/{prNo}")
-//    public ResponseEntity<PurchaseHeader> get(@PathVariable("prNo") String prNo){
-//            PurchaseHeader purchaseHeader = purchaseService.getPurchaseHeaderByPrNo(prNo);
-//            if (purchaseHeader == null) {
-//                return ResponseEntity.notFound().build();
-//            }
-//            PurchaseHeaderDto purchaseHeader = new PurchaseHeader(purchaseHeader);
-//            return ResponseEntity.ok().body(purchaseHeader);
-//    }
+    @GetMapping("/getById/{prNo}")
+    public ResponseEntity<PurchaseHeader> getProduct(@PathVariable("prNo") String prNo){
+            PurchaseHeader purchaseHeader = purchaseService.getProductByPrNo(prNo);
+            if (purchaseHeader == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body(purchaseHeader);
+    }
 }
