@@ -25,43 +25,20 @@ public class PurchaseController {
             return new ResponseEntity<>(createdPurchaseHeader, HttpStatus.CREATED);
         }
 
+    @PutMapping("/{prNo}")
+    public ResponseEntity<PurchaseHeader> updatePurchase( @RequestBody PurchaseHeader purchaseHeader) {
+        PurchaseHeader updatedPurchaseHeader = purchaseService.updatePurchase( purchaseHeader);
+        return new ResponseEntity<>(updatedPurchaseHeader,HttpStatus.OK);
+    }
 
-
-//    @PostMapping
-//    public ResponseEntity<PurchaseHeader> createPurchase(@Valid @RequestBody PurchaseHeader request) {
-//        PurchaseHeader purchaseHeader = new PurchaseHeader();
-//        purchaseHeader.setPrStatus(request.getPrStatus());
-//        purchaseHeader.setAddress(request.getAddress());
-//        purchaseHeader.setPhNo(request.getPhNo());
-//        purchaseHeader.setSubTotal(request.getSubTotal());
-//        purchaseHeader.setGrandTotal(request.getGrandTotal());
-//        PurchaseHeader createdPurchaseHeader = purchaseService.createPurchase(purchaseHeader);
-//
-//        return ResponseEntity.ok(createdPurchaseHeader);
-//    }
-
-//
-//    @PostMapping("/{prNo}/addItems")
-//    public ResponseEntity<PurchaseHeaderDto> addItems(@PathVariable("prNo") String prNo, @RequestBody List<PipelineDto> pipelineDtos) {
-//        purchaseService.addItemsToPurchase(prNo, pipelineDtos);
-//        PurchaseHeader updatedPurchaseHeader = purchaseService.getPurchaseHeaderByPrNo(prNo);
-//        PurchaseHeaderDto purchaseHeaderDto = new PurchaseHeaderDto(updatedPurchaseHeader);
-//        return new ResponseEntity<>(purchaseHeaderDto, HttpStatus.OK);
-//    }
-
-//    @PutMapping
-//    public ResponseEntity<String> update(@RequestBody PurchaseHeader purchaseHeader) {
-//        purchaseService.updateItem(purchaseHeader);
-//        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
-//    }
 
 //    @GetMapping("/getById/{prNo}")
-//    public ResponseEntity<PurchaseHeaderDto> get(@PathVariable("prNo") String prNo){
+//    public ResponseEntity<PurchaseHeader> get(@PathVariable("prNo") String prNo){
 //            PurchaseHeader purchaseHeader = purchaseService.getPurchaseHeaderByPrNo(prNo);
 //            if (purchaseHeader == null) {
 //                return ResponseEntity.notFound().build();
 //            }
-//            PurchaseHeaderDto purchaseHeaderDto = new PurchaseHeaderDto(purchaseHeader);
-//            return ResponseEntity.ok().body(purchaseHeaderDto);
+//            PurchaseHeaderDto purchaseHeader = new PurchaseHeader(purchaseHeader);
+//            return ResponseEntity.ok().body(purchaseHeader);
 //    }
 }

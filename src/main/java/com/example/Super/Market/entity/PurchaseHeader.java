@@ -3,9 +3,7 @@ package com.example.Super.Market.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,6 +33,6 @@ public class PurchaseHeader {
     private double grandTotal;
 
     @OneToMany(mappedBy = "purchaseNo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Pipeline> line ;
+    private List<PurchaseHeaderLine> line ;
 
 }

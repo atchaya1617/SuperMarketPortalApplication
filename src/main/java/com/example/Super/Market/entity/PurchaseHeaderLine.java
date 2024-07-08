@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Pipeline {
+public class PurchaseHeaderLine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
