@@ -28,7 +28,7 @@ public class ProductService {
 
 
     public Product update(Product product){
-        return productRepository.save(product);
+        return productRepository.saveAndFlush(product);
     }
 
     public Product deleteById(String productId) {

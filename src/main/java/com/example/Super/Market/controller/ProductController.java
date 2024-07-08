@@ -17,13 +17,6 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-//    @PostMapping("/addProduct")
-//    public ResponseEntity<Product> saveProduct(@RequestBody ProductDto productDto) {
-//        Product savedProduct = productService.add(productDto);
-//        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
-//    }
-
-
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product request) {
@@ -44,20 +37,19 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteProduct/{productId}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable("productId") String productId) {
+    @DeleteMapping("/deleteProduct")
+    public ResponseEntity<Product> deleteProduct(@RequestParam String productId) {
         Product deleteProduct = productService.deleteById(productId);
         return new ResponseEntity<>(deleteProduct, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String productId){
+    @GetMapping("/getProduct")
+    public ResponseEntity<Product> getProductById(@RequestParam String productId){
         Product product = productService.getById(productId);
         return ResponseEntity.ok(product);
-
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product> product = productService.getAll();
         return ResponseEntity.ok(product);
